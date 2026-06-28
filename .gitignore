@@ -128,6 +128,10 @@ models/
 # Generated tutorial visualization outputs
 tutorials/**/test_images/*_visualize.jpg
 
+# Playwright test artifacts / cache
+playwright_artifacts/
+.playwright-cli/
+
 # Environments
 .env
 .venv
