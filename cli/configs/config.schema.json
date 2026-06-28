@@ -1,0 +1,90 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Rex-Omni batch detection config",
+  "description": "Configuration for cli/batch_detect.py (detection task only).",
+  "type": "object",
+  "required": ["dataset", "categories", "output"],
+  "additionalProperties": false,
+  "properties": {
+    "model": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "RexOmniWrapper constructor settings. All optional; sensible defaults applied.",
+      "properties": {
+        "model_path": {
+          "type": "string",
+          "description": "HF repo id or local checkpoint dir.",
+          "default": "models/Rex-Omni"
+        },
+        "backend": {
+          "type": "string",
+          "enum": ["transformers", "vllm"],
+          "default": "transformers"
+        },
+        "attn_implementation": {
+          "type": "string",
+          "enum": ["flash_attention_2", "sdpa", "eager"],
+          "default": "sdpa",
+          "description": "transformers backend only. Use sdpa/eager when flash-attn is unavailable."
+        },
+        "min_pixels": { "type": "integer", "minimum": 1, "default": 12544 },
+        "max_pixels": { "type": "integer", "minimum": 1, "default": 2007040 },
+        "max_tokens": { "type": "integer", "minimum": 1, "default": 4096 },
+        "temperature": { "type": "number", "minimum": 0, "default": 0.0 },
+        "top_p": { "type": "number", "minimum": 0, "maximum": 1, "default": 0.05 },
+        "top_k": { "type": "integer", "minimum": 1, "default": 1 },
+        "repetition_penalty": { "type": "number", "minimum": 0, "default": 1.05 }
+      }
+    },
+    "dataset": {
+      "type": "object",
+      "required": ["image_dir"],
+      "additionalProperties": false,
+      "properties": {
+        "image_dir": {
+          "type": "string",
+          "description": "Directory containing the input images."
+        },
+        "pattern": {
+          "type": "string",
+          "default": "*.jpg",
+          "description": "Glob naming convention for input images, e.g. *.jpg"
+        }
+      }
+    },
+    "task": {
+      "type": "string",
+      "enum": ["detection"],
+      "default": "detection",
+      "description": "Only detection is supported by this CLI."
+    },
+    "categories": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 1,
+      "description": "Object categories to detect. One or more (multi-class supported)."
+    },
+    "batch_size": {
+      "type": "integer",
+      "minimum": 1,
+      "default": 4,
+      "description": "Number of images per GPU inference call."
+    },
+    "output": {
+      "type": "object",
+      "required": ["results_json"],
+      "additionalProperties": false,
+      "properties": {
+        "results_json": {
+          "type": "string",
+          "description": "Path to write the results JSON. Parent dirs are created."
+        },
+        "include_raw_output": {
+          "type": "boolean",
+          "default": true,
+          "description": "Store the raw model text per image for traceability."
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "model": {
+    "model_path": "models/Rex-Omni",
+    "backend": "transformers",
+    "attn_implementation": "sdpa",
+    "min_pixels": 12544,
+    "max_pixels": 2007040,
+    "max_tokens": 4096,
+    "temperature": 0.0,
+    "top_p": 0.05,
+    "top_k": 1,
+    "repetition_penalty": 1.05
+  },
+  "dataset": {
+    "image_dir": "/home/kasm-user/Desktop/ccw90_images_Jun28_2026/images",
+    "pattern": "*.jpg"
+  },
+  "task": "detection",
+  "categories": ["leaf"],
+  "batch_size": 4,
+  "output": {
+    "results_json": "/home/kasm-user/Desktop/ccw90_images_Jun28_2026/rexomni_leaf_Jun28_2026/results.json",
+    "include_raw_output": true
+  }
+}
