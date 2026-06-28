@@ -122,6 +122,12 @@ celerybeat.pid
 # SageMath parsed files
 *.sage.py
 
+# Downloaded model weights (large; fetch via huggingface-cli)
+models/
+
+# Generated tutorial visualization outputs
+tutorials/**/test_images/*_visualize.jpg
+
 # Environments
 .env
 .venv

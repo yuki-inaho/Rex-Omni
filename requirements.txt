@@ -7,6 +7,9 @@ accelerate==1.10.1
 flash-attn==2.7.4.post1
 gradio==4.44.1
 gradio_image_prompter==0.1.0
+# Pin fastapi/starlette: gradio 4.44.1's positional TemplateResponse(name, context)
+# breaks with fastapi>=0.113 / starlette>=0.40 ("TypeError: unhashable type: 'dict'").
+fastapi==0.112.4
 pydantic==2.10.6
 vllm==0.9.1 ; sys_platform != 'win32'
 triton ; sys_platform != 'win32'

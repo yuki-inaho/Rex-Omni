@@ -32,6 +32,14 @@ def parse_args():
         choices=["transformers", "vllm"],
         help="Backend to use for inference",
     )
+    parser.add_argument(
+        "--attn_implementation",
+        type=str,
+        default="sdpa",
+        choices=["flash_attention_2", "sdpa", "eager"],
+        help="Attention implementation for transformers backend "
+        "(use sdpa/eager when flash-attn is unavailable)",
+    )
     parser.add_argument("--temperature", type=float, default=0.0)
     parser.add_argument("--top_p", type=float, default=0.05)
     parser.add_argument("--top_k", type=int, default=1)
@@ -913,7 +921,7 @@ if __name__ == "__main__":
     print(f"Backend: {args.backend}")
 
     # Initialize Rex Omni model
-    rex_model = RexOmniWrapper(
+    wrapper_kwargs = dict(
         model_path=args.model_path,
         backend=args.backend,
         max_tokens=args.max_tokens,
@@ -924,6 +932,10 @@ if __name__ == "__main__":
         min_pixels=args.min_pixels,
         max_pixels=args.max_pixels,
     )
+    # attn_implementation only applies to the transformers backend.
+    if args.backend == "transformers":
+        wrapper_kwargs["attn_implementation"] = args.attn_implementation
+    rex_model = RexOmniWrapper(**wrapper_kwargs)
 
     print("✅ Model initialized successfully!")
 
